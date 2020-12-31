@@ -1,0 +1,67 @@
+<script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+
+<p>Номер страницы:<br>
+   <input id="numPage" type="number">
+</p>
+<p>Лимит:<br>
+   <input id="lim" type="number">
+</p>
+<input id="req" type="submit" value="Запрос"><br>
+<p id="res"></p>
+<ul></ul>
+
+<script type="text/javascript">  
+  const btn = document.querySelector('#req');
+  const pRes = document.querySelector('#res');
+  var myList = document.querySelector('ul');
+
+  const useRequest = () => {
+    const numPage = document.querySelector('#numPage').value;
+    const lim = document.querySelector('#lim').value;
+    console.log(numPage + lim);
+    if(numPage >= 1 && numPage <= 10 && lim >= 1 && lim <= 10){
+      const options = {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          page: numPage,
+          limit: lim,
+        },
+      }
+      fetch('https://picsum.photos/v2/list?page=' + numPage + '&limit=' + lim, options)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => { 
+          for (var i = 0; i < data.length; i++){       	
+            document.getElementById('res').innerHTML = '';
+            var list = document.createElement('li');
+            myList.appendChild(list);
+            list.innerHTML = '<a href="' + data[i].url + '">' + data[i].author + '</a>'; 
+          }
+        })
+        .catch(() => {
+          console.log('error');
+        });
+    }
+    else{
+      $('li').remove();
+      var p = document.createElement('p'); 
+      console.log('Номер страницы вне диапозона от 1 до 10');
+      pRes.appendChild(p);
+      p.innerHTML = 'Номер страницы вне диапозона от 1 до 10';
+    }
+  }
+
+  btn.addEventListener('click', async () => {
+    console.log('start');
+
+    const requestResult = await useRequest();
+    //console.log('requestResult', requestResult);
+
+    console.log('end');
+  });
+</script>
