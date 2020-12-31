@@ -1,0 +1,46 @@
+<textarea cols="19" rows="1" id='userID' required></textarea>
+<div>
+  <button class="btn j-btn">Получить список задач</button>
+</div>
+<ul></ul>
+
+<script type="text/javascript">  
+  const btn = document.querySelector('.j-btn');
+  var myList = document.querySelector('ul');
+
+  const useRequest = () => {
+    return fetch('https://jsonplaceholder.typicode.com/users/3/todos')
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        var txtId = document.getElementById('userID').value;
+        for (var i = 0; i < data.length; i++) {
+          if(txtId == data[i].id){
+            data[i].userId = txtId;
+
+            var list = document.createElement('li');       
+            myList.appendChild(list);
+
+            list.innerHTML = 'Title: ' + data[i].title + '<li>Completed: ' + data[i].completed + '</li>';   		
+          }
+          else{
+            if(i == (data.length - 1) && txtId != data[i].id)
+              alert("Пользователь с указанным id не найден");
+          }
+        }
+      })
+      .catch(() => {
+        console.log('error');
+      })
+   }
+
+   btn.addEventListener('click', async () => {
+    console.log('start');
+
+    const requestResult = await useRequest();
+    //console.log('requestResult', requestResult);
+
+    console.log('end');
+  });
+</script>
