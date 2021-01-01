@@ -1,3 +1,5 @@
+<script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+
 <textarea cols="19" rows="1" id='userID' required></textarea>
 <div>
   <button class="btn j-btn">Получить список задач</button>
@@ -29,6 +31,7 @@
           }
         }
         if(flagId == false ){
+          $('li').remove();
           alert("Пользователь с указанным id не найден");
         }
       })
