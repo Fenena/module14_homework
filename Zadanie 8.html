@@ -40,7 +40,8 @@
             document.getElementById('res').innerHTML = '';
             var list = document.createElement('li');
             myList.appendChild(list);
-            list.innerHTML = '<a href="' + data[i].url + '">' + data[i].author + '</a>'; 
+            list.innerHTML = '<a href="' + data[i].url + '">' + data[i].author + '</a>';
+            localStorage.setItem('myRes', data[i].url + ' ' + data[i].author);
           }
         })
         .catch(() => {
