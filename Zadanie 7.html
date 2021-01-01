@@ -15,6 +15,7 @@
       })
       .then((data) => {
         var txtId = document.getElementById('userID').value;
+        var flagId = false;
         for (var i = 0; i < data.length; i++) {
           if(txtId == data[i].id){
             data[i].userId = txtId;
@@ -22,12 +23,13 @@
             var list = document.createElement('li');       
             myList.appendChild(list);
 
-            list.innerHTML = 'Title: ' + data[i].title + '<li>Completed: ' + data[i].completed + '</li>';   		
+            list.innerHTML = 'Title: ' + data[i].title + '<li>Completed: ' + data[i].completed + '</li>'; 
+            
+            flagId = true;
           }
-          else{
-            if(i == (data.length - 1) && txtId != data[i].id)
-              alert("Пользователь с указанным id не найден");
-          }
+        }
+        if(flagId == false ){
+          alert("Пользователь с указанным id не найден");
         }
       })
       .catch(() => {
