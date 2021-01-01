@@ -1,0 +1,93 @@
+<script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<select name="select" id="year">
+  <option disabled selected value> — select an option — </option>
+</select>
+<button id="btn">Рассчитать отчет</button><Br>
+<table border="1" cellpadding="5">
+	<tbody>
+		<tr>
+			<td>1 кв.</td>
+			<td>2 кв.</td>
+			<td>3 кв.</td>
+			<td>4 кв.</td>
+		</tr>
+		<tr>
+			<td id="q1">&nbsp;</td>
+			<td id="q2">&nbsp;</td>
+			<td id="q3">&nbsp;</td>
+			<td id="q4">&nbsp;</td>
+		</tr>
+	</tbody>
+</table><Br>
+<div id="myDiv"></div>
+<canvas id="myChart" width="400" height="400"></canvas>
+
+<script type="text/javascript">
+    var xhr = new XMLHttpRequest();
+  xhr.open("get", "https://my.api.mockaroo.com/revenue_2017-2019.json?key=fd36b440", true);
+
+  xhr.onload = function () {
+
+    let data = JSON.parse(xhr.responseText);
+    //console.log(data);
+
+    $('#year').append(data.map(function (val, key) {
+      return '<option value="' + key + '">' + val.year + '</option>';
+    }));
+
+    $('#btn').click(function () {
+      $.each(data, function (key, val) {
+        var select = document.getElementById("year");
+        var myDiv = document.querySelector("#myDiv");
+        var value = select.value; 
+        if (value == "") {
+          alert("Выберите, пожалуйста, год");
+          return false;
+        }
+        else {
+          if (value == key) {
+            $('#q1').html('');
+            $('#q2').html('');
+            $('#q3').html('');
+            $('#q4').html('');
+            $('#q1').append(val.sales.q1);
+            $('#q2').append(val.sales.q2);
+            $('#q3').append(val.sales.q3);
+            $('#q4').append(val.sales.q4);
+
+            var x = document.createElement("button");
+            var t = document.createTextNode("Открыть график");
+            x.appendChild(t);
+            myDiv.appendChild(x);
+
+            
+            x.onclick = function () {
+              var ctx = document.querySelector('canvas');
+              var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: ['Кв.1', 'Кв.2', 'Кв.3', 'Кв.4'],
+                  datasets: [{
+                    label: 'Выручка за ' + val.year + ' год',
+                    data: [val.sales.q1, val.sales.q2, val.sales.q3, val.sales.q4]
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                }
+              });
+            };
+          }
+        }
+      });
+    });
+  };
+  xhr.send();
+
+  xhr.onerror = function () {
+    console.log('Ошибка запроса');
+  };
+</script>
